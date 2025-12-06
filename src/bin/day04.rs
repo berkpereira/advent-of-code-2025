@@ -11,14 +11,6 @@ struct Grid {
 }
 
 impl Grid {
-    fn new(width: usize, height: usize) -> Self {
-        Grid{
-            data: vec![false; width * height],
-            width,
-            height,
-        }
-    }
-
     fn get(&self, row: usize, col: usize) -> bool {
         self.data[row * self.width + col]
     }
@@ -28,11 +20,7 @@ impl Grid {
     }
 
     fn check_index(&self, row: isize, col: isize) -> bool {
-        if row >= 0 && col >= 0 && (row as usize) <= (self.height - 1) && (col as usize) <= (self.width - 1) {
-            return true
-        } else {
-            return false
-        }
+        row >= 0 && col >= 0 && (row as usize) <= (self.height - 1) && (col as usize) <= (self.width - 1)
     }
 
     fn count_neighbours(&self, row: usize, col: usize) -> usize {
@@ -43,8 +31,8 @@ impl Grid {
             for j in -1isize..=1 {
                 if i == 0 && j == 0 {continue}
                 candidate_idx = [(row as isize) + i, (col as isize) + j];
-                if self.check_index(candidate_idx[0], candidate_idx[1]) {
-                    if self.get(candidate_idx[0] as usize, candidate_idx[1] as usize) {neighbour_count += 1}
+                if self.check_index(candidate_idx[0], candidate_idx[1]) && self.get(candidate_idx[0] as usize, candidate_idx[1] as usize) {
+                    neighbour_count += 1
                 }
             }
         }
@@ -55,11 +43,11 @@ impl Grid {
 fn parse_input_to_grid(input: &str) -> Grid {
     let data = input.chars().filter_map(|c| {
         if c == '@' {
-            return Some(true)
+            Some(true)
         } else if c == '.' {
-            return Some(false)
+            Some(false)
         } else {
-            return None
+            None
         }
     }).collect();
 
@@ -88,7 +76,6 @@ fn part1(input: &str) -> usize {
 
 fn part2(input: &str) -> i32 {
     let mut total_removed = 0;
-    let mut count = 0;
     let mut map_grid = parse_input_to_grid(input);
     loop {
         let mut removed_this_pass = 0;
